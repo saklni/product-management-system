@@ -2,12 +2,26 @@ import mongoose, { Schema } from "mongoose";
 
 const UserSchema = new Schema(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+    },
+
     email: {
       type: String,
       unique: true,
+      required: true,
     },
-    password: String,
+
+    password: {
+      type: String,
+      required: true,
+    },
+
+    role: {
+      type: String,
+      default: "admin",
+    },
   },
   {
     timestamps: true,
