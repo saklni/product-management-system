@@ -8,9 +8,17 @@ if (!MONGODB_URI) {
 
 export async function connectDB() {
   try {
-    await mongoose.connect(MONGODB_URI);
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
+
+    await mongoose.connect(MONGODB_URI, {
+  family: 4,
+});
+
     console.log("MongoDB Connected");
   } catch (error) {
     console.error("MongoDB Connection Error:", error);
+    throw error;
   }
 }

@@ -1,0 +1,59 @@
+/* ========================================
+   Table — Container, Header, Body
+   ======================================== */
+
+.table-container {
+  overflow-x: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.table-container th {
+  background: var(--card);
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted-foreground);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.table-container td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+.table-container tr:last-child td {
+  border-bottom: none;
+}
+
+.table-container tbody tr {
+  transition: background 0.15s ease;
+}
+
+.table-container tbody tr:hover {
+  background: var(--card-hover);
+}
+
+/* Mono cell for prices */
+.mono-cell {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 13px;
+}
+
+.price-cell {
+  font-family: var(--font-geist-mono, monospace);
+  font-size: 13px;
+}
