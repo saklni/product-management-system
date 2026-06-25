@@ -21,7 +21,11 @@ export async function PUT(
     await connectDB();
     const body = await request.json();
 
-    const category = await Category.findByIdAndUpdate(id, body, { new: true });
+    const category = await Category.findOneAndUpdate(
+      { _id: id, userId: (session.user as any).id },
+      body,
+      { new: true }
+    );
 
     if (!category) {
       return NextResponse.json(
@@ -56,7 +60,10 @@ export async function DELETE(
     const { id } = await params;
     await connectDB();
 
-    const category = await Category.findByIdAndDelete(id);
+    const category = await Category.findOneAndDelete({
+      _id: id,
+      userId: (session.user as any).id,
+    });
 
     if (!category) {
       return NextResponse.json(

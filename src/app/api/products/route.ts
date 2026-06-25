@@ -15,7 +15,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const products = await Product.find()
+    const products = await Product.find({ userId: (session.user as any).id })
       .populate("categoryId", "name")
       .sort({ createdAt: -1 })
       .lean();

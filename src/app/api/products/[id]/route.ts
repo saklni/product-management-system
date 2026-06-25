@@ -21,7 +21,11 @@ export async function PUT(
     await connectDB();
     const body = await request.json();
 
-    const product = await Product.findByIdAndUpdate(id, body, { new: true });
+    const product = await Product.findOneAndUpdate(
+      { _id: id, userId: (session.user as any).id },
+      body,
+      { new: true }
+    );
 
     if (!product) {
       return NextResponse.json(
@@ -56,7 +60,10 @@ export async function DELETE(
     const { id } = await params;
     await connectDB();
 
-    const product = await Product.findByIdAndDelete(id);
+    const product = await Product.findOneAndDelete({
+      _id: id,
+      userId: (session.user as any).id,
+    });
 
     if (!product) {
       return NextResponse.json(

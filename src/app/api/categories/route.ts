@@ -15,7 +15,9 @@ export async function GET() {
     }
 
     await connectDB();
-    const categories = await Category.find().sort({ createdAt: -1 }).lean();
+    const categories = await Category.find({ userId: (session.user as any).id })
+      .sort({ createdAt: -1 })
+      .lean();
 
     return NextResponse.json({ success: true, data: categories });
   } catch (error) {
@@ -40,7 +42,10 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
 
-    const category = await Category.create(body);
+    const category = await Category.create({
+      ...body,
+      userId: (session.user as any).id,
+    });
 
     return NextResponse.json(
       { success: true, data: category },

@@ -35,6 +35,7 @@ const ProductSchema = new Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      required: [true, "userId is required"],
     },
   },
   {

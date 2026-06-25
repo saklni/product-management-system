@@ -1,0 +1,74 @@
+/* Transaction List Styles inside Modal */
+.tx-item-list-container {
+  background-color: var(--input-bg);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--border);
+}
+
+.tx-item-list-title {
+  font-weight: 600;
+  color: var(--muted-foreground);
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tx-item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tx-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.tx-item-info {
+  flex: 1;
+}
+
+.tx-item-name {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.tx-item-qty {
+  color: var(--muted);
+  margin-left: 0.5rem;
+}
+
+.tx-item-price {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.125rem;
+}
+
+.tx-item-subtotal {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.tx-modal-footer-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.tx-summary-label {
+  color: var(--muted-foreground);
+  font-weight: 500;
+}
+
+.tx-summary-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+}

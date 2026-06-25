@@ -5,12 +5,16 @@ const CategorySchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
 
     description: {
       type: String,
       default: "",
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "userId is required"],
     },
   },
   {

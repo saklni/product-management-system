@@ -5,6 +5,7 @@ import { connectDB } from "@/lib/mongodb";
 import Product from "@/models/Product";
 import Category from "@/models/Category";
 import User from "@/models/User";
+import Transaction from "@/models/Transaction";
 
 export async function GET() {
   try {
@@ -18,12 +19,14 @@ export async function GET() {
 
     await connectDB();
 
-    const [totalProducts, totalCategories, totalUsers, products] =
+    const userId = (session.user as any).id;
+    const [totalProducts, totalCategories, totalUsers, products, transactions] =
       await Promise.all([
-        Product.countDocuments(),
-        Category.countDocuments(),
-        User.countDocuments(),
-        Product.find().lean(),
+        Product.countDocuments({ userId }),
+        Category.countDocuments({ userId }),
+        User.countDocuments({ _id: userId }), // Cuma akan hitung 1 untuk user itu sendiri
+        Product.find({ userId }).lean(),
+        Transaction.find({ userId }).lean(),
       ]);
 
     const totalValue = products.reduce(
@@ -35,11 +38,23 @@ export async function GET() {
       (p: any) => (p.stock || 0) <= 5
     ).length;
 
-    const recentProducts = await Product.find()
+    const recentProducts = await Product.find({ userId: (session.user as any).id })
       .populate("categoryId", "name")
       .sort({ createdAt: -1 })
       .limit(5)
       .lean();
+
+    const totalTransactions = transactions.length;
+    const totalRevenue = transactions.reduce(
+      (sum: number, t: any) => sum + (t.totalPrice || 0),
+      0
+    );
+
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    const todayRevenue = transactions
+      .filter((t: any) => new Date(t.createdAt) >= startOfToday)
+      .reduce((sum: number, t: any) => sum + (t.totalPrice || 0), 0);
 
     return NextResponse.json({
       success: true,
@@ -50,6 +65,9 @@ export async function GET() {
         totalValue,
         lowStockProducts,
         recentProducts,
+        totalTransactions,
+        totalRevenue,
+        todayRevenue,
       },
     });
   } catch (error) {

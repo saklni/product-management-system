@@ -10,6 +10,8 @@
 @import "../styles/dashboard.css";
 @import "../styles/products.css";
 @import "../styles/categories.css";
+@import "../styles/pos.css";
+@import "../styles/transactions.css";
 
 @theme inline {
   --color-background: var(--background);
