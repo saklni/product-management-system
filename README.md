@@ -17,6 +17,8 @@ Product Management System adalah aplikasi manajemen produk berbasis web yang dib
 * Product CRUD
 * Product Image Upload
 * Dashboard
+* Kasir 
+* Riwayat transaksi
 
 ## Project Status
 
