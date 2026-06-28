@@ -15,7 +15,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const products = await Product.find({ userId: (session.user as any).id })
+    const products = await Product.find({ userId: session.user.id })
       .populate("categoryId", "name")
       .sort({ createdAt: -1 })
       .lean();
@@ -43,15 +43,10 @@ export async function POST(request: Request) {
     await connectDB();
     const body = await request.json();
 
-    console.log("[API Products POST] Received body:", JSON.stringify(body));
-    console.log("[API Products POST] imageUrl value:", JSON.stringify(body.imageUrl));
-
     const product = await Product.create({
       ...body,
-      userId: (session.user as any).id,
+      userId: session.user.id,
     });
-
-    console.log("[API Products POST] Created product imageUrl:", product.imageUrl);
 
     return NextResponse.json(
       { success: true, data: product },

@@ -22,7 +22,7 @@ export async function PUT(
     const body = await request.json();
 
     const category = await Category.findOneAndUpdate(
-      { _id: id, userId: (session.user as any).id },
+      { _id: id, userId: session.user.id },
       body,
       { new: true }
     );
@@ -62,7 +62,7 @@ export async function DELETE(
 
     const category = await Category.findOneAndDelete({
       _id: id,
-      userId: (session.user as any).id,
+      userId: session.user.id,
     });
 
     if (!category) {

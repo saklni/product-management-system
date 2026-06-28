@@ -16,7 +16,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const transactions = await Transaction.find({ userId: (session.user as any).id })
+    const transactions = await Transaction.find({ userId: session.user.id })
       .sort({ createdAt: -1 })
       .lean();
 
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
     for (const item of items) {
       const product = await Product.findOne({
         _id: item.productId,
-        userId: (session.user as any).id,
+        userId: session.user.id,
       });
       if (!product) {
         return NextResponse.json(
@@ -82,7 +82,7 @@ export async function POST(request: Request) {
     // Decrement stocks
     for (const item of items) {
       await Product.findOneAndUpdate(
-        { _id: item.productId, userId: (session.user as any).id },
+        { _id: item.productId, userId: session.user.id },
         { $inc: { stock: -item.qty } }
       );
     }
@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       invoiceNumber: invoiceString,
       items,
       totalPrice,
-      userId: (session.user as any).id,
+      userId: session.user.id,
     });
 
     return NextResponse.json(

@@ -7,6 +7,16 @@ import Category from "@/models/Category";
 import User from "@/models/User";
 import Transaction from "@/models/Transaction";
 
+interface LeanProduct {
+  price?: number;
+  stock?: number;
+}
+
+interface LeanTransaction {
+  totalPrice?: number;
+  createdAt: Date | string;
+}
+
 export async function GET() {
   try {
     const session = await getServerSession(authOptions);
@@ -19,8 +29,8 @@ export async function GET() {
 
     await connectDB();
 
-    const userId = (session.user as any).id;
-    const [totalProducts, totalCategories, totalUsers, products, transactions] =
+    const userId = session.user.id;
+    const [totalProducts, totalCategories, totalUsers, rawProducts, rawTransactions] =
       await Promise.all([
         Product.countDocuments({ userId }),
         Category.countDocuments({ userId }),
@@ -29,16 +39,19 @@ export async function GET() {
         Transaction.find({ userId }).lean(),
       ]);
 
+    const products = rawProducts as unknown as LeanProduct[];
+    const transactions = rawTransactions as unknown as LeanTransaction[];
+
     const totalValue = products.reduce(
-      (sum: number, p: any) => sum + (p.price || 0) * (p.stock || 0),
+      (sum: number, p: LeanProduct) => sum + (p.price || 0) * (p.stock || 0),
       0
     );
 
     const lowStockProducts = products.filter(
-      (p: any) => (p.stock || 0) <= 5
+      (p: LeanProduct) => (p.stock || 0) <= 5
     ).length;
 
-    const recentProducts = await Product.find({ userId: (session.user as any).id })
+    const recentProducts = await Product.find({ userId: session.user.id })
       .populate("categoryId", "name")
       .sort({ createdAt: -1 })
       .limit(5)
@@ -46,15 +59,15 @@ export async function GET() {
 
     const totalTransactions = transactions.length;
     const totalRevenue = transactions.reduce(
-      (sum: number, t: any) => sum + (t.totalPrice || 0),
+      (sum: number, t: LeanTransaction) => sum + (t.totalPrice || 0),
       0
     );
 
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     const todayRevenue = transactions
-      .filter((t: any) => new Date(t.createdAt) >= startOfToday)
-      .reduce((sum: number, t: any) => sum + (t.totalPrice || 0), 0);
+      .filter((t: LeanTransaction) => new Date(t.createdAt) >= startOfToday)
+      .reduce((sum: number, t: LeanTransaction) => sum + (t.totalPrice || 0), 0);
 
     return NextResponse.json({
       success: true,

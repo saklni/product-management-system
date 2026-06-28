@@ -31,7 +31,6 @@ export async function POST(request: Request) {
       folder: "product-management-system",
     });
 
-    console.log("[API Upload] Cloudinary secure_url:", result.secure_url);
     return NextResponse.json({ success: true, url: result.secure_url });
   } catch (error) {
     console.error("Upload error:", error);

@@ -1,17 +1,38 @@
 @import "tailwindcss";
 
-/* Style imports — split per fitur */
-@import "../styles/base.css";
-@import "../styles/components.css";
-@import "../styles/modal.css";
-@import "../styles/table.css";
-@import "../styles/layout.css";
-@import "../styles/auth.css";
-@import "../styles/dashboard.css";
-@import "../styles/products.css";
-@import "../styles/categories.css";
-@import "../styles/pos.css";
-@import "../styles/transactions.css";
+/* ============================================================
+   Design tokens (dark theme). These map straight into Tailwind's
+   theme below, so classes like `bg-card`, `text-muted-foreground`,
+   `border-border`, `bg-primary` etc. are real Tailwind utilities,
+   not custom CSS classes.
+   ============================================================ */
+:root {
+  --background: #0a0a0f;
+  --foreground: #f0f0f5;
+  --card: #12121a;
+  --card-hover: #1a1a25;
+  --border: #1e1e2e;
+  --border-hover: #2e2e42;
+  --primary: #6366f1;
+  --primary-hover: #818cf8;
+  --primary-glow: rgba(99, 102, 241, 0.15);
+  --secondary: #8b5cf6;
+  --accent: #06b6d4;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --danger-hover: #dc2626;
+  --muted: #71717a;
+  --muted-foreground: #a1a1aa;
+  --input-bg: #0f0f17;
+  --input-border: #27273a;
+  --input-focus: #6366f1;
+  --sidebar-bg: #0c0c14;
+  --sidebar-hover: #16162a;
+  --sidebar-active: #1a1a35;
+  --gradient-start: #6366f1;
+  --gradient-end: #8b5cf6;
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -19,6 +40,7 @@
   --color-card: var(--card);
   --color-card-hover: var(--card-hover);
   --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-secondary: var(--secondary);
@@ -37,4 +59,75 @@
   --color-sidebar-active: var(--sidebar-active);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom radius scale used across the whole UI (cards/buttons/inputs/modals) */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+::selection {
+  background: var(--primary);
+  color: white;
+}
+
+/* ============================================================
+   Keyframes + matching @utility classes.
+   This is the Tailwind v4 idiomatic way to add custom utilities
+   (see https://tailwindcss.com/docs/adding-custom-styles#using-custom-css)
+   instead of writing ad-hoc component classes.
+   ============================================================ */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@utility animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+@utility animate-scale-in {
+  animation: scaleIn 0.2s ease-out forwards;
+}
+@utility animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+@utility gradient-text {
+  background-image: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
